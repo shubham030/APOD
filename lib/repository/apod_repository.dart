@@ -30,7 +30,7 @@ class APODRepository {
       } else {
         return left(DioError());
       }
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return left(DioError());
     }
   }
