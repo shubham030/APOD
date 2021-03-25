@@ -33,7 +33,7 @@ class _ApodDisplayPageState extends State<ApodDisplayPage> {
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(1990),
-                  lastDate: DateTime(2024),
+                  lastDate: DateTime.now(),
                 );
                 if (result != null) {
                   bloc.changeDate(result);
@@ -66,10 +66,19 @@ class _ApodDisplayPageState extends State<ApodDisplayPage> {
                 stream: bloc.apodData,
                 builder:
                     (BuildContext context, AsyncSnapshot<ApodModel> snapshot) {
-                  if (snapshot.data == null) {
-                    return CircularProgressIndicator();
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error));
                   }
-                  print(snapshot.data.hdurl);
+                  if (snapshot.data == null) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.49,
+                        ),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

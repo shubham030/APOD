@@ -10,23 +10,27 @@ class APODRepository {
   static Future<Either<DioError, ApodModel>> getApodForDate(
     DateTime date,
   ) async {
-    print(convertDateTime(date));
-    var result = await Dio().get(
-      baseUrl,
-      queryParameters: {
-        "api_key": API_KEY,
-        "date": convertDateTime(date),
-      },
-    );
-    print(result.extra);
-    // }, onReceiveProgress: (x, y) {
-    //   print(x);
-    //   print(y);
-    // });
+    try {
+      print(convertDateTime(date));
+      var result = await Dio().get(
+        baseUrl,
+        queryParameters: {
+          "api_key": API_KEY,
+          "date": convertDateTime(date),
+        },
+      );
+      print(result.data);
+      // }, onReceiveProgress: (x, y) {
+      //   print(x);
+      //   print(y);
+      // });
 
-    if (result.statusCode == 200) {
-      return right(ApodModel.fromMap(result.data));
-    } else {
+      if (result.statusCode == 200) {
+        return right(ApodModel.fromMap(result.data));
+      } else {
+        return left(DioError());
+      }
+    } on Exception catch (e) {
       return left(DioError());
     }
   }

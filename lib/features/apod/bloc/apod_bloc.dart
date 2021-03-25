@@ -5,7 +5,6 @@ import 'package:rxdart/subjects.dart';
 
 class ApodBloc {
   String previousSearch;
-
   final _apodData = BehaviorSubject<ApodModel>();
   final _date = BehaviorSubject<DateTime>();
   final _isFindButtonVisible = BehaviorSubject<bool>();
@@ -21,11 +20,15 @@ class ApodBloc {
       print("fetching aborted,same data");
       return;
     }
+    _apodData.add(null);
     APODRepository.getApodForDate(_date?.valueWrapper?.value ?? DateTime.now())
         .then((value) {
       if (value != null) {
         value.fold(
-          (l) => _apodData.addError(l.error),
+          (l) {
+            print(l.response);
+            _apodData.addError(l.error ?? 'Something went wrong');
+          },
           (r) {
             previousSearch = convertDateTime(_date?.valueWrapper?.value);
             _apodData.add(r);
