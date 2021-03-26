@@ -18,6 +18,12 @@ class _ApodDisplayPageState extends State<ApodDisplayPage> {
   }
 
   @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
